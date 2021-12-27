@@ -131,6 +131,7 @@ def confidence_to_peaks(dists, nbrs, confidence, max_conn=1):
     # Note that dists has been sorted in ascending order
     assert dists.shape[0] == confidence.shape[0]
     assert dists.shape == nbrs.shape
+    conf_eps = 1e-4
 
     num, _ = dists.shape
     dist2peak = {i: [] for i in range(num)}
@@ -140,7 +141,7 @@ def confidence_to_peaks(dists, nbrs, confidence, max_conn=1):
         nbr_conf = confidence[nbr]
         for j, c in enumerate(nbr_conf):
             nbr_idx = nbr[j]
-            if i == nbr_idx or c <= confidence[i]:
+            if i == nbr_idx or c < (confidence[i] - conf_eps):
                 continue
             dist2peak[i].append(dists[i, j])
             peaks[i].append(nbr_idx)
