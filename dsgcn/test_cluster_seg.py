@@ -6,8 +6,9 @@ import numpy as np
 import os.path as osp
 import torch.nn.functional as F
 
-from mmcv.runner import load_checkpoint
-from mmcv.parallel import MMDataParallel
+from mmengine.runner import load_checkpoint
+# from mmcv.parallel import MMDataParallel
+from torch.nn import DataParallel
 
 from utils import list2dict, write_meta
 from dsgcn.datasets import (build_dataset, build_processor, build_dataloader)
@@ -60,7 +61,8 @@ def test_cluster_seg(model, cfg, logger):
                                        cfg.workers_per_gpu,
                                        train=False)
 
-        model = MMDataParallel(model, device_ids=range(cfg.gpus))
+#         model = MMDataParallel(model, device_ids=range(cfg.gpus))
+        model = DataParallel(model)
         if cfg.cuda:
             model.cuda()
 

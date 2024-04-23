@@ -35,7 +35,9 @@ class GCNVDataset(object):
             self.features = read_probs(feat_path, self.inst_num,
                                        self.feature_dim)
             if self.is_norm_feat:
+                print('===========l2norm===========')
                 self.features = l2norm(self.features)
+#                 self.features = self.features / np.sqrt(np.sum(self.features**2, -1, keepdims=True))
             if self.inst_num == -1:
                 self.inst_num = self.features.shape[0]
             self.size = 1 # take the entire graph as input

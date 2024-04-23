@@ -11,13 +11,14 @@ def precise_dist(feat, nbrs, num_process=4, sort=True, verbose=False):
     feat_share = torch.from_numpy(feat).share_memory_()
     nbrs_share = torch.from_numpy(nbrs).share_memory_()
     dist_share = torch.zeros_like(nbrs_share).share_memory_()
-
+    print('precise_dist_share_mem============')
     precise_dist_share_mem(feat_share,
                            nbrs_share,
                            dist_share,
                            num_process=num_process,
                            sort=sort,
                            verbose=verbose)
+    print('finished precise_dist_share_mem')
 
     del feat_share
     gc.collect()
@@ -108,5 +109,6 @@ def faiss_search_knn(feat,
                                    num_process=num_process,
                                    sort=sort,
                                    verbose=verbose)
+        print('finished precise_dist')
 
     return dists, nbrs

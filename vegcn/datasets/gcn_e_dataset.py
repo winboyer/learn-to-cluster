@@ -39,7 +39,9 @@ class GCNEDataset(object):
             self.features = read_probs(feat_path, self.inst_num,
                                        self.feature_dim)
             if self.is_norm_feat:
+                print('===========l2norm============')
                 self.features = l2norm(self.features)
+#                 self.features = self.features / np.sqrt(np.sum(self.features**2, -1, keepdims=True))
             if self.inst_num == -1:
                 self.inst_num = self.features.shape[0]
             self.size = self.inst_num
@@ -59,6 +61,8 @@ class GCNEDataset(object):
                 knn_prefix = osp.join(prefix, 'knns', name)
                 knns = build_knns(knn_prefix, self.features, cfg.knn_method,
                                   cfg.knn)
+            print('self.inst_num=========', self.inst_num)
+            print('len(knns)==========', len(knns))
             assert self.inst_num == len(knns), "{} vs {}".format(
                 self.inst_num, len(knns))
 

@@ -121,7 +121,8 @@ def graph_clustering_dynamic_th(edges,
         raise ValueError('Pooling operation not supported')
 
     nodes = np.sort(np.unique(edges.flatten()))
-    mapping = -1 * np.ones((nodes.max() + 1), dtype=np.int)
+#     mapping = -1 * np.ones((nodes.max() + 1), dtype=np.int)
+    mapping = -1 * np.ones((nodes.max() + 1), dtype=np.int_)
     mapping[nodes] = np.arange(nodes.shape[0])
     link_idx = mapping[edges]
     vertex = [Data(n) for n in nodes]

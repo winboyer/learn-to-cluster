@@ -101,11 +101,14 @@ def faiss_search_approx_knn(query,
                             bs=int(1e6),
                             index_factory_str=None,
                             verbose=False):
+    print('faiss_index_wrapper===========')
     index = faiss_index_wrapper(target,
                                 nprobe=nprobe,
                                 index_factory_str=index_factory_str,
                                 verbose=verbose)
+    print('finished faiss_index_wrapper')
     dists, nbrs = batch_search(index, query, k=k, bs=bs, verbose=verbose)
+    print('finished batch_search')
 
     del index
     gc.collect()

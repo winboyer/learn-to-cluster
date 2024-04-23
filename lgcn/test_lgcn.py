@@ -7,6 +7,7 @@ import torch.nn.functional as F
 
 from mmcv.runner import load_checkpoint
 from mmcv.parallel import MMDataParallel
+# from torch.nn import DataParallel
 
 from lgcn.datasets import build_dataset, build_dataloader
 from lgcn.online_evaluation import online_evaluate
@@ -33,15 +34,19 @@ def test(model, dataset, cfg, logger):
                                        train=False)
 
         model = MMDataParallel(model, device_ids=range(cfg.gpus))
+#         model = DataParallel(model)
         if cfg.cuda:
             model.cuda()
 
         model.eval()
         for i, (data, cid, node_list) in enumerate(data_loader):
+#         for i, (data) in enumerate(data_loader):
+#             print('i, data========', i, len(data))
             with torch.no_grad():
                 _, _, h1id, gtmat = data
                 pred, loss = model(data, return_loss=True)
                 losses += [loss.item()]
+#                 pred = model(data, return_loss=False)
                 pred = F.softmax(pred, dim=1)
                 if i % cfg.log_config.interval == 0:
                     if dataset.ignore_label:

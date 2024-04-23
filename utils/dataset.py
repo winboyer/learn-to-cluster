@@ -7,6 +7,15 @@ import numpy as np
 from utils.misc import TextColors, l2norm, read_probs, read_meta
 
 
+def normalize(feat, axis=1):
+    if len(feat.shape) == 1:
+        return feat / np.linalg.norm(feat)
+    if axis == 0:
+        return feat / np.linalg.norm(feat, axis=0)
+    elif axis == 1:
+        return feat / np.linalg.norm(feat, axis=1)[:, np.newaxis]
+        
+        
 class BasicDataset():
     def __init__(self,
                  name,
@@ -41,6 +50,10 @@ class BasicDataset():
                                    dim,
                                    self.dtype,
                                    verbose=verbose)
+        print('self.features.shape=========', self.features.shape)
+#         self.features = self.features / np.linalg.norm(self.features, axis=1)[:, np.newaxis]
+        self.features = self.features / np.sqrt(np.sum(self.features**2, -1, keepdims=True))
+    
         if self.normalize:
             self.features = l2norm(self.features)
 
@@ -51,7 +64,7 @@ class BasicDataset():
                   self.inst_num, self.cls_num, self.dim, self.feat_path,
                   TextColors.FATAL, self.normalize, TextColors.ENDC,
                   self.dtype))
-
+        
 
 if __name__ == '__main__':
     import argparse

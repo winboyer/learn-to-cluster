@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import numpy as np
 import argparse
 
 from utils import (BasicDataset, build_knns, knns2spmat, fast_knns2spmat,
@@ -31,15 +32,16 @@ def parse_args():
     parser.add_argument("--no_normalize",
                         action='store_true',
                         help="normalize feature by default")
-    parser.add_argument("--test_all", action='store_true')
+#     parser.add_argument("--test_all", action='store_true')
+    parser.add_argument("--test_all", default=False, type=bool)
     args = parser.parse_args()
 
     return args
 
 
 if __name__ == '__main__':
-    args = parse_args()
-
+    args = parse_args()    
+    
     ds = BasicDataset(name=args.name,
                       prefix=args.prefix,
                       dim=args.dim,
@@ -57,7 +59,9 @@ if __name__ == '__main__':
                           args.knn_method,
                           args.knn,
                           num_process=args.num_process)
+        print('finish build_knns')
 
+    print('args.test_all=========', args.test_all)
     if args.test_all:
         with Timer('knns2spmat'):
             adj1 = knns2spmat(knns, args.knn, args.th_sim, use_sim=True)

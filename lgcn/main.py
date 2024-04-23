@@ -32,7 +32,7 @@ def parse_args():
         default=1,
         help='number of gpus(only applicable to non-distributed training)')
     parser.add_argument('--distributed', action='store_true', default=False)
-    parser.add_argument('--save_output', action='store_true', default=False)
+    parser.add_argument('--save_output', action='store_true', default=True)
     parser.add_argument('--no_cuda', action='store_true', default=False)
     parser.add_argument('--force', action='store_true', default=False)
     args = parser.parse_args()

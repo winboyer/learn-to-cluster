@@ -183,6 +183,7 @@ def build_knns(knn_prefix,
                is_rebuild=False,
                feat_create_time=None):
     knn_prefix = os.path.join(knn_prefix, '{}_k_{}'.format(knn_method, k))
+    print('knn_prefix=========', knn_prefix)
     mkdir_if_no_exists(knn_prefix)
     knn_path = knn_prefix + '.npz'
     if os.path.isfile(
@@ -195,6 +196,7 @@ def build_knns(knn_prefix,
     if not os.path.isfile(knn_path) or is_rebuild:
         index_path = knn_prefix + '.index'
         with Timer('build index'):
+            print('knn_method=======', knn_method)
             if knn_method == 'hnsw':
                 index = knn_hnsw(feats, k, index_path)
             elif knn_method == 'faiss':
@@ -334,9 +336,11 @@ class knn_faiss(knn):
                 print('[faiss] read index from {}'.format(index_path))
                 index = faiss.read_index(index_path)
             else:
+                print('else===========')
                 feats = feats.astype('float32')
                 size, dim = feats.shape
                 index = faiss.IndexFlatIP(dim)
+                print('index_key=========', index_key)
                 if index_key != '':
                     assert index_key.find(
                         'HNSW') < 0, 'HNSW returns distances insted of sims'
@@ -366,6 +370,7 @@ class knn_faiss(knn):
                 self.knns = np.load(knn_ofn)['data']
             else:
                 sims, nbrs = index.search(feats, k=k)
+                print('sims=========', sims, sims.shape)
                 self.knns = [(np.array(nbr, dtype=np.int32),
                               1 - np.array(sim, dtype=np.float32))
                              for nbr, sim in zip(nbrs, sims)]
@@ -389,6 +394,7 @@ class knn_faiss_gpu(knn):
                 print('[faiss_gpu] read knns from {}'.format(knn_ofn))
                 self.knns = np.load(knn_ofn)['data']
             else:
+                print('=============faiss_search_knn=============')
                 dists, nbrs = faiss_search_knn(feats,
                                                k=k,
                                                nprobe=nprobe,
@@ -396,7 +402,7 @@ class knn_faiss_gpu(knn):
                                                is_precise=is_precise,
                                                sort=sort,
                                                verbose=False)
-
+                print('finished faiss_search_knn')
                 self.knns = [(np.array(nbr, dtype=np.int32),
                               np.array(dist, dtype=np.float32))
                              for nbr, dist in zip(nbrs, dists)]

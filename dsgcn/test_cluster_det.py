@@ -4,6 +4,8 @@ import os
 import torch
 import numpy as np
 
+# from mmengine.runner import load_checkpoint
+# from torch.nn import DataParallel
 from mmcv.runner import load_checkpoint
 from mmcv.parallel import MMDataParallel
 
@@ -36,6 +38,7 @@ def test_cluster_det(model, cfg, logger):
                                        train=False)
 
         model = MMDataParallel(model, device_ids=range(cfg.gpus))
+#         model = DataParallel(model)
         if cfg.cuda:
             model.cuda()
 

@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 
-from mmcv.runner import get_dist_info
+from mmengine.dist import get_dist_info
 from torch.utils.data import DataLoader
 from torch.utils.data.dataloader import default_collate
 
